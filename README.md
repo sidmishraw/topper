@@ -7,7 +7,7 @@
 
 The gif below shows how to use the `Topper` extension.
 
-![](https://gfycat.com/LeanNeatEasternnewt)
+![](https://zippy.gfycat.com/LeanNeatEasternnewt.gif)
 
 ## Extension Settings
 
