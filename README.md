@@ -7,7 +7,7 @@
 
 The gif below shows how to use the `Topper` extension.
 
-![Topper steps](https://gfycat.com/ifr/LeanNeatEasternnewt)
+<iframe src='https://gfycat.com/ifr/PassionateIncompatibleIcelandicsheepdog' frameborder='0' scrolling='no' width='982' height='636' allowfullscreen></iframe>
 
 ## Extension Settings
 
