@@ -2,12 +2,13 @@
     "name": "topper",
     "displayName": "topper",
     "description": "A fileheader utility",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "sidmishraw",
     "engines": {
         "vscode": "^1.13.0"
     },
     "categories": [
+        "Snippets",
         "Other"
     ],
     "activationEvents": [
@@ -33,7 +34,7 @@
                             "personalProfile": {
                                 "author": "bulbasaur",
                                 "website": "bulbasaur.github.bitbucket.yababbdadado.com",
-                                "copyright": "None",
+                                "copyright": "None \n None",
                                 "license": "None",
                                 "email": "ivysaur.bulbasaur@venosaur.com"
                             }
@@ -62,6 +63,7 @@
                                     "${headerPrefix} @author ${author}",
                                     "${headerPrefix} @description ${description}",
                                     "${headerPrefix} @created ${createdDate}",
+                                    "${headerPrefix} @copyright ${copyright}",
                                     "${headerPrefix} @last-modified ${lastModifiedDate}",
                                     "${headerEnd}"
                                 ]

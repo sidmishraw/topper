@@ -86,17 +86,47 @@ This extension contributes the following settings:
   ]
   ```
 
+  As you can already see, each header template object is of form:
+  ```
+    {
+        "<languageId>": {
+            "headerBegin": <string value>,
+            "headerPrefix": <string value>,
+            "headerEnd": <string value>,
+            "template": [
+                <string values with parameters>
+            ]
+        }
+    }
+  ```
+
+  To use the parameters inside the `template`, use the `${<parameter name>}` notation.
+
 
 Topper has a few intrinsic template parameters:
-* `createdDate` - The date when the `Topper: Add header` command is invoked.
-* `lastModifiedDate` - The date when the `Topper: Add header` command is invoked. [This is a WIP, I'm trying to make it auto updatable with every save.]
+* `createdDate` - The date when the file was created, this is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+
+
+* `lastModifiedDate` - The date when the file was modified, this too is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+
+
 * `fileName` - The name of the file
+
+
 * `fileVersion` - The VSCode maintained fileVersion
 
 
-### 0.0.1
+## Changelog
 
-Initial release of `Topper` extension. [Alpha]
+* ### 0.0.2 [Alpha]
+
+  * Added support for multi line strings as values for the custom template parameters.
+  * Updated `lastModifiedDate` to be fetched from the underlying OS. This is the true last modified date.
+
+
+* ### 0.0.1 [Alpha]
+  
+  Initial release of `Topper` extension. [Alpha]
 
 ### P.S
 In case of any suggestions or issues please email me at [**sidharth.mishra@sjsu.edu**](mailto:sidharth.mishra@sjsu.edu)

@@ -12,11 +12,27 @@
 
   // vscode import
   const vscode = require("vscode");
+  const fs = require("fs");
+  const path = require("path");
 
   // for logging
   const LOGGING_MODE_DEBUG = "debug";
   const LOGGING_MODE_INFO = "info";
   const LOGGING_MODE_NONE = "none";
+
+  // topper specific constants
+  const TOPPER = "topper";
+  const TOPPER_CUSTOM_TEMPLATE_PARAMETERS = "customTemplateParameters";
+  const TOPPER_HEADER_TEMPLATES = "headerTemplates";
+  const TEMPLATE = "template";
+  const DEFAULT_HEADER_TEMPLATE = "defaultCStyled";
+  const HEADER_BEGIN = "headerBegin";
+  const HEADER_PREFIX = "headerPrefix";
+  const HEADER_END = "headerEnd";
+
+  // vscode apis
+  const window = vscode.window;
+  const workspace = vscode.workspace;
 
   /**
    * Logging utility
@@ -25,7 +41,7 @@
    */
   let loginfo = function (message) {
 
-    let logginMode = LOGGING_MODE_NONE;
+    let logginMode = LOGGING_MODE_INFO;
 
     switch (logginMode) {
 
@@ -48,114 +64,132 @@
     }
   };
 
-  // vscode apis
-  const window = vscode.window;
-  const workspace = vscode.workspace;
-  const editor = vscode.window.activeTextEditor;
+  /**
+   * Fetches the time related intrinsic parameters -- creation time and last modified times
+   * from the underlying OS.
+   * 
+   * @param {*} callback the callback function that is executed after computation of the intrinsic params
+   */
+  function fetchTimeIntrinsicParams(filePath, intrinsicParams, callback) {
 
-  if (!workspace || !editor) {
+    fs.stat(filePath, (error, stats) => {
 
-    loginfo(`Situation doesn't look all that well, not going to load the extension! Workspace: ${workspace}; Editor: ${editor}`);
+      if (error) {
 
-    return;
-  }
+        loginfo(`ERROR:: ${JSON.stringify(error)}`);
 
-  // topper specific constants
-  const TOPPER = "topper";
-  const TOPPER_CUSTOM_TEMPLATE_PARAMETERS = "customTemplateParameters";
-  const TOPPER_HEADER_TEMPLATES = "headerTemplates";
-  const TEMPLATE = "template";
-  const DEFAULT_HEADER_TEMPLATE = "defaultCStyled";
+        intrinsicParams["createdDate"] = new Date();
+        intrinsicParams["lastModifiedDate"] = new Date();
+      } else {
 
-  // filename of the active document
-  let filePath = editor.document.uri.fsPath;
-  let fileName = filePath.split(vscode.Uri._slash)[filePath.split(vscode.Uri._slash).length - 1];
-  let fileVersion = editor.document.version;
-  let languageId = editor.document.languageId;
+        loginfo(`Stats received from the OS: ${JSON.stringify(stats)}`);
 
-  // topper intrinsic params
-  const intrinsicParams = {
-    "createdDate": null,
-    "lastModifiedDate": null,
-    "fileName": fileName,
-    "fileVersion": fileVersion
-  };
-
-  // custom topper template parameters
-  let topperTemplateParams = workspace.getConfiguration(TOPPER).get(TOPPER_CUSTOM_TEMPLATE_PARAMETERS);
-
-  // custom header templates that are language specific
-  let topperTemplates = workspace.getConfiguration(TOPPER).get(TOPPER_HEADER_TEMPLATES);
-
-  loginfo(`FileName: ${fileName}; FileVersion: ${fileVersion}; Language: ${languageId}`);
-  loginfo(`TopperTemplateParams from configuration: ${JSON.stringify(topperTemplateParams)}`);
-  loginfo(`TopperTemplates from configuration: ${JSON.stringify(topperTemplates)}`);
-
-  // choose the header template depending on the languageId of the file
-  let selectedHeaderTemplate = (function () {
-
-    let selectedTemplate = null;
-
-    topperTemplates.forEach((headerTemplate) => {
-
-      let templateName = Object.getOwnPropertyNames(headerTemplate)[0];
-
-      if (!templateName) {
-
-        return;
+        intrinsicParams["createdDate"] = stats.birthtime;
+        intrinsicParams["lastModifiedDate"] = stats.mtime;
       }
 
-      if (templateName.toLowerCase() === languageId.toLowerCase()) {
-
-        selectedTemplate = headerTemplate[languageId];
-      }
+      callback();
     });
-
-    if (!selectedTemplate) {
-
-      selectedTemplate = topperTemplates[0][DEFAULT_HEADER_TEMPLATE];
-    }
-
-    return selectedTemplate;
-  }());
-
-  loginfo(`\n\nSelected Header Template:: ${JSON.stringify(selectedHeaderTemplate)}`);
+  }
 
   /**
    * The command addTopHeader adds the configured header to the active file.
    */
   topper.addTopHeader = function () {
 
-    intrinsicParams["createdDate"] = new Date();
-    intrinsicParams["lastModifiedDate"] = new Date();
+    const editor = vscode.window.activeTextEditor;
 
-    let customProfiles = new Map();
-    let customProfileNames = [];
+    if (!workspace || !editor) {
 
-    // create the list of all the profile names for the selection menu
-    topperTemplateParams.forEach(function (templateParamObject) {
+      loginfo(`Situation doesn't look all that well, not going to load the extension! Workspace: ${workspace}; Editor: ${editor}`);
 
-      for (let templateParamElement in templateParamObject) {
+      return;
+    }
 
-        customProfiles.set(templateParamElement, templateParamObject[templateParamElement]);
-        customProfileNames.push(templateParamElement);
+    // filename of the active document
+    let filePath = editor.document.uri.fsPath;
+    let fileName = path.parse(filePath).base;
+    let fileVersion = editor.document.version;
+    let languageId = editor.document.languageId;
+
+    // topper intrinsic params
+    const intrinsicParams = {
+      "createdDate": null,
+      "lastModifiedDate": null,
+      "fileName": fileName,
+      "fileVersion": fileVersion
+    };
+
+    // custom topper template parameters
+    let topperTemplateParams = workspace.getConfiguration(TOPPER).get(TOPPER_CUSTOM_TEMPLATE_PARAMETERS);
+
+    // custom header templates that are language specific
+    let topperTemplates = workspace.getConfiguration(TOPPER).get(TOPPER_HEADER_TEMPLATES);
+
+    loginfo(`FileName: ${fileName}; FileVersion: ${fileVersion}; Language: ${languageId}`);
+    loginfo(`TopperTemplateParams from configuration: ${JSON.stringify(topperTemplateParams)}`);
+    loginfo(`TopperTemplates from configuration: ${JSON.stringify(topperTemplates)}`);
+
+    // choose the header template depending on the languageId of the file
+    let selectedHeaderTemplate = (function () {
+
+      let selectedTemplate = null;
+
+      topperTemplates.forEach((headerTemplate) => {
+
+        let templateName = Object.getOwnPropertyNames(headerTemplate)[0];
+
+        if (!templateName) {
+
+          return;
+        }
+
+        if (templateName.toLowerCase() === languageId.toLowerCase()) {
+
+          selectedTemplate = headerTemplate[languageId];
+        }
+      });
+
+      if (!selectedTemplate) {
+
+        selectedTemplate = topperTemplates[0][DEFAULT_HEADER_TEMPLATE];
       }
-    });
 
-    loginfo(`Profile Names: ${JSON.stringify(customProfileNames)}`);
+      return selectedTemplate;
+    }());
 
-    // display the info box for the next step
-    window.showInformationMessage("Please select the profile name to apply").then(() => {
+    loginfo(`\n\nSelected Header Template:: ${JSON.stringify(selectedHeaderTemplate)}`);
 
-      // show the quickpick selection menu to select the profile
-      window.showQuickPick(customProfileNames).then((selectedProfileName) => {
+    fetchTimeIntrinsicParams(filePath, intrinsicParams, () => {
 
-        loginfo(`User selected profile: ${selectedProfileName}`);
-        let selectedTemplateParams = customProfiles.get(selectedProfileName);
+      let customProfiles = new Map();
+      let customProfileNames = [];
 
-        loginfo(`Selected Params: ${JSON.stringify(selectedTemplateParams)}`);
+      // create the list of all the profile names for the selection menu
+      topperTemplateParams.forEach(function (templateParamObject) {
 
-        makeHeaderString(selectedTemplateParams, publishHeaderString);
+        for (let templateParamElement in templateParamObject) {
+
+          customProfiles.set(templateParamElement, templateParamObject[templateParamElement]);
+          customProfileNames.push(templateParamElement);
+        }
+      });
+
+      loginfo(`Profile Names: ${JSON.stringify(customProfileNames)}`);
+
+      // display the info box for the next step
+      window.showInformationMessage("Please select the profile name to apply").then(() => {
+
+        // show the quickpick selection menu to select the profile
+        window.showQuickPick(customProfileNames).then((selectedProfileName) => {
+
+          loginfo(`User selected profile: ${selectedProfileName}`);
+          let selectedTemplateParams = customProfiles.get(selectedProfileName);
+
+          loginfo(`Selected Params: ${JSON.stringify(selectedTemplateParams)}`);
+
+          makeHeaderString(editor, selectedHeaderTemplate, selectedTemplateParams, intrinsicParams);
+        });
       });
     });
   };
@@ -166,7 +200,7 @@
    * @param {*} selectedTemplateParams the template parameters of the selected template profile
    * @param {*} callback the function to do after initial setup is done
    */
-  function makeHeaderString(selectedTemplateParams, callback) {
+  function makeHeaderString(editor, selectedHeaderTemplate, selectedTemplateParams, intrinsicParams) {
 
     let headerTemplateLines = selectedHeaderTemplate[TEMPLATE];
 
@@ -201,6 +235,8 @@
           templateValue = intrinsicParams[templateName];
         }
 
+        templateValue = templateValue.toString().replace(/\n/g, `\n${selectedHeaderTemplate[HEADER_PREFIX]}`);
+
         headerLine.push(templateValue);
       });
 
@@ -209,7 +245,7 @@
 
     loginfo(`Header String: ${headerLines.join("\n")}`);
 
-    callback(headerLines.join("\n"));
+    publishHeaderString(editor, headerLines.join("\n"));
   }
 
   /**
@@ -217,7 +253,7 @@
    * 
    * @param {*} headerString the header string made after replacing all the templates with their values.
    */
-  function publishHeaderString(headerString) {
+  function publishHeaderString(editor, headerString) {
 
     loginfo("Publishing to the document");
 
