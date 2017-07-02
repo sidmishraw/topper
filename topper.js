@@ -1,10 +1,12 @@
 /**
- * topper.js
- * 
- * Extension specific logic goes here.
- * 
- * @author sidmishraw
- */
+* topper.js
+*
+* @author sidmishraw < sidharth.mishra@sjsu.edu >
+* @description Extension specific logic goes here.
+* @created Sat Jul 01 2017 12:04:03 GMT-0700 (PDT)
+* @copyright None
+* @last-modified Sun Jul 02 2017 14:31:52 GMT-0700 (PDT)
+*/
 
 (function (topper) {
 
