@@ -7,14 +7,7 @@
 
 The gif below shows how to use the `Topper` extension.
 
-<div style='position:relative;padding-bottom:65%'>
-  <p>Command:: Topper: Add header</p>
-  </br>
-  </br>
-  <iframe src='https://gfycat.com/ifr/LeanNeatEasternnewt' frameborder='0' scrolling='no' width='80%' height='80%' style='position:absolute;top:0;left:0;' allowfullscreen>
-  </iframe>
-</div>
-
+![Topper steps](https://gfycat.com/ifr/LeanNeatEasternnewt)
 
 ## Extension Settings
 
