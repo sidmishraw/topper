@@ -90,7 +90,7 @@ This extension contributes the following settings:
 
   As you can already see, each header template object is of form:
 
-  ```
+  ```json
     {
         "<languageId>": {
             "headerBegin": <string value>,
@@ -109,11 +109,11 @@ Topper has a few intrinsic template parameters:
 
 * `createdDate` - The date when the file was created, this is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
 
-- `lastModifiedDate` - The date when the file was modified, this too is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+* `lastModifiedDate` - The date when the file was modified, this too is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
 
 * `fileName` - The name of the file
 
-- `fileVersion` - The VSCode maintained fileVersion
+* `fileVersion` - The VSCode maintained fileVersion
 
 ## Defining a custom keyboard shortcut
 
@@ -124,15 +124,60 @@ To define a custom keyboard shortcut do the following:
 * Add the following entry:
 
 ```json
+// This opens up the interactive Topper with all the popups.
 {
   "key": "cmd+shift+t",
   "command": "topper.addTopHeader"
 }
 ```
 
+or
+
+```json
+// Defines the shortcut for the specific profile. Now only that specific profile is invoked. No annoying popups!
+{
+  "key": "<your-key-combination>",
+  "command": "topper.addTopHeader.<your-profile-name>"
+}
+```
+
+For eg:
+
+```json
+// Invokes Topper using the `personalProfile` directly, skipping all the interactive popups/dialog boxes.
+{
+  "key": "cmd+shift+t 1",
+  "command": "topper.addTopHeader.personalProfile"
+}
+```
+
 The `"key"` field can be any key combination. The command has to be `"topper.addTopHeader"`.
 
 ## Changelog
+
+### [v0.2.0]
+
+* Code cleanup.
+
+* Addition of profile specific shortcuts added to `keybinding.json` of VSCode:
+
+```json
+  {
+    "key": "cmd+shift+t 1",
+    "command": "topper.addTopHeader.personalProfile"
+  },
+  {
+    "key": "shift+cmd+t 2",
+    "command": "topper.addTopHeader.officeProfile"
+  }
+```
+
+The first key combination is `Command + Shift + T` followed by a `1` or `2` depending on the profile. The user is free to bind any profile to any key combination.
+The commandId is of the form `topper.addTopHeader.<your-profile-name>`.
+
+### [v0.1.0]
+
+* Stable release.
 
 ### [v0.0.3]
 
@@ -154,6 +199,6 @@ The `"key"` field can be any key combination. The command has to be `"topper.add
 
 In case of any suggestions or issues please email me at [**sidharth.mishra@sjsu.edu**](mailto:sidharth.mishra@sjsu.edu)
 
-## References:
+## References
 
 * Template style configuration idea inspired by [https://github.com/doi/fileheadercomment](https://github.com/doi/fileheadercomment)
