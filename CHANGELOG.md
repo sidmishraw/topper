@@ -12,7 +12,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [v0.0.2]
 
-* minor fixes.
+* Added support for multi line strings as values for the custom template parameters.
+
+* Updated `lastModifiedDate` to be fetched from the underlying OS. This is the true last modified date.
 
 ## [v0.0.1]
 
