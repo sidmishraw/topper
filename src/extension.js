@@ -1,11 +1,18 @@
+//==============================================================================================
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require("vscode");
 const _ = require("lodash");
 
+//==============================================================================================
+
 // topper specific import
 const topper = require("./topper");
 const topper2 = require("./topperv2");
+const topperWatcher = require("./topper-watcher"); //  the watcher that watches for changes in files.
+
+//==============================================================================================
 
 /**
  * Invoked when the extension is activated.
@@ -13,6 +20,8 @@ const topper2 = require("./topperv2");
  */
 function activate(context) {
   console.log('Congratulations, your extension "topper" is now active!');
+  //==============================================================================================
+  topperWatcher.startWatcher();
   //==============================================================================================
   var addTopHeader = vscode.commands.registerCommand("topper.addTopHeader", function() {
     console.log("Topper is going to add header to the active file!");

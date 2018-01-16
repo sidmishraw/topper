@@ -6,6 +6,14 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v0.3.0]
+
+* Fixed issue where the `@last-modified` field in the header was not getting updated automatically. Now, there is a configuration field `topper.lastModified` where the users can specify their custom field names for `last-modified` incase they do not use `@last-modified`. The default value is `@last-modified`.
+
+> Caveats: The implementation is choppy in some aspects because of limited support from VS Code APIs. Expect a better implementation in the next version.
+
+* Code cleanup.
+
 ### [v0.2.0]
 
 * Code cleanup.

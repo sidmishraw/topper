@@ -1,8 +1,8 @@
 {
   "name": "topper",
   "displayName": "topper",
-  "description": "A fileheader utility",
-  "version": "0.2.0",
+  "description": "A fileheader utility.",
+  "version": "0.3.0",
   "publisher": "sidmishraw",
   "engines": {
     "vscode": "^1.13.0"
@@ -83,6 +83,12 @@
               }
             }
           ]
+        },
+        "topper.lastModified": {
+          "type": "string",
+          "description":
+            "The key of the field in the header template. For eg: @last-modified. Topper looks for this to determine if it needs to update the value.",
+          "default": "@last-modified"
         }
       }
     }
