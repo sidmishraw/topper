@@ -64,7 +64,7 @@ This extension contributes the following settings:
           "${headerPrefix} @author ${author}",
           "${headerPrefix} @description ${description}",
           "${headerPrefix} @created ${createdDate}",
-          "${headerPrefix} @last-modified ${lastModifiedDate}",
+          "${headerPrefix} @last-modified Tue Jan 16 2018 11:55:12 GMT-0800 (PST),
           "${headerEnd}"
         ]
       }
@@ -154,6 +154,11 @@ For eg:
 The `"key"` field can be any key combination. The command has to be `"topper.addTopHeader"`.
 
 ## Changelog
+
+### [v0.3.1]
+
+* Fixed the issue of Topper capturing templates of "last-modified". Now, there are strict patterns in place.
+
 
 ### [v0.3.0]
 

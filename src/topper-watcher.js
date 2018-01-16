@@ -4,7 +4,7 @@
  * @description Watches the files that had topper add headers.
  * @created Mon Jan 15 2018 15:51:52 GMT-0800 (PST)
  * @copyright 2017 Sidharth Mishra
- * @last-modified Tue Jan 16 2018 00:49:40 GMT-0800 (PST))
+ * @last-modified Tue Jan 16 2018 11:56:13 GMT-0800 (PST))
  */
 
 //==============================================================================================
@@ -35,10 +35,19 @@ const Position = vscode.Position;
 
 //==============================================================================================
 
+/**
+ * The ChangeEvent listener for the FileSystemWatcher.
+ */
+let fileWatcherListener = null;
+
+/**
+ * Starts the FileSystemWatcher to check for onChange events.
+ */
 const startWatcher = () => {
   const workspace = vscode.workspace;
   const fileWatcher = workspace.createFileSystemWatcher("**/*");
-  fileWatcher.onDidChange(changedFileUri => {
+  if (!fileWatcher || fileWatcher == undefined || fileWatcher == null) return; // null check
+  fileWatcherListener = fileWatcher.onDidChange(changedFileUri => {
     // console.log(`File has changed!`);
     async.waterfall(
       [cbk => cbk(null, workspace, changedFileUri), updateLastModifiedDate],
@@ -66,13 +75,16 @@ const updateLastModifiedDate = (workspace, filePath, cbk) => {
       let lastModifiedKey = vscode.workspace
         .getConfiguration("topper")
         .get("lastModified");
-      const regex = new RegExp(`${lastModifiedKey}\\:{0,1}\\s+(.*)\\n*`, "i"); // the regex
+      //Tue Jan 16 2018 11:39:37 GMT-0800 (PST)
+      const regex = new RegExp(
+        `[ ]*${lastModifiedKey}\\:{0,1}\\s+([A-Za-z]{3} [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}\\:[0-9]{2}\\:[0-9]{2} [A-Za-z]{3}\\-[0-9]{4} \\([A-Za-z]{3,}\\))\\n*`
+      ); // the regex
       let matches = _.filter(lines, l => l.match(regex)); //l.match(/\@last\-modified\:{0,1}\s+(.*)\n*/i));
       if (!matches || (matches && matches.length < 1)) return; // no topper header present with last-updated field
       let lmdDateLineNbr = lines.indexOf(matches[0]);
       let matchText = matches[0].match(regex)[1]; //match(/\@last\-modified\:{0,1}\s+(.*)\n*/i)[1];
       let rplcStartIndex = matches[0].indexOf(matchText); // start index of match
-      let rplcEndIndex = rplcStartIndex + matchText.length - 1; // end index of the area to replace
+      let rplcEndIndex = rplcStartIndex + matchText.length; // end index of the area to replace
       let replaceRange = new Range(
         new Position(lmdDateLineNbr, rplcStartIndex),
         new Position(lmdDateLineNbr, rplcEndIndex)
@@ -90,3 +102,4 @@ const updateLastModifiedDate = (workspace, filePath, cbk) => {
 //==============================================================================================
 
 exports.startWatcher = startWatcher;
+exports.fileWatcherListener = fileWatcherListener;

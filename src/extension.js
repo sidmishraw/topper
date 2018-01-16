@@ -48,6 +48,7 @@ function activate(context) {
  * Invoked when the extension is deactivated.
  */
 function deactivate() {
+  if (topperWatcher.fileWatcherListener) topperWatcher.fileWatcherListener.dispose();
   console.log("Topper has been deactivated.");
 }
 

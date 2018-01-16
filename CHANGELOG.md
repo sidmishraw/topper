@@ -6,6 +6,10 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v0.3.1]
+
+* Fixed the issue of Topper capturing templates of "last-modified". Now, there are strict patterns in place.
+
 ### [v0.3.0]
 
 * Fixed issue where the `@last-modified` field in the header was not getting updated automatically. Now, there is a configuration field `topper.lastModified` where the users can specify their custom field names for `last-modified` incase they do not use `@last-modified`. The default value is `@last-modified`.

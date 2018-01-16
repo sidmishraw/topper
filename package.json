@@ -2,7 +2,7 @@
   "name": "topper",
   "displayName": "topper",
   "description": "A fileheader utility.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "sidmishraw",
   "engines": {
     "vscode": "^1.13.0"
@@ -61,7 +61,7 @@
                   "${headerPrefix} @description ${description}",
                   "${headerPrefix} @created ${createdDate}",
                   "${headerPrefix} @copyright ${copyright}",
-                  "${headerPrefix} @last-modified ${lastModifiedDate}",
+                  "${headerPrefix} @last-modified Tue Jan 16 2018 11:54:38 GMT-0800 (PST),
                   "${headerEnd}"
                 ]
               }
