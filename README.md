@@ -90,15 +90,13 @@ This extension contributes the following settings:
 
   As you can already see, each header template object is of form:
 
-  ```json
+  ```javascript
     {
-        "<languageId>": {
-            "headerBegin": <string value>,
-            "headerPrefix": <string value>,
-            "headerEnd": <string value>,
-            "template": [
-                <string values with parameters>
-            ]
+        "[languageId]": {
+            "headerBegin": string,
+            "headerPrefix": string,
+            "headerEnd": string,
+            "template": string[] // <string values with parameters>
         }
     }
   ```
