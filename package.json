@@ -7,8 +7,14 @@
   "engines": {
     "vscode": "^1.13.0"
   },
-  "categories": ["Snippets", "Other"],
-  "activationEvents": ["*", "onCommand:topper.addTopHeader"],
+  "categories": [
+    "Snippets",
+    "Other"
+  ],
+  "activationEvents": [
+    "*",
+    "onCommand:topper.addTopHeader"
+  ],
   "main": "./src/extension",
   "contributes": {
     "commands": [
@@ -23,8 +29,7 @@
       "properties": {
         "topper.customTemplateParameters": {
           "type": "array",
-          "description":
-            "Configures template parameters. These parameters can be used in the header templates as placeholders.",
+          "description": "Configures template parameters. These parameters can be used in the header templates as placeholders.",
           "default": [
             {
               "personalProfile": {
@@ -46,8 +51,7 @@
         },
         "topper.headerTemplates": {
           "type": "array",
-          "description":
-            "Configure the templates for the headers depending on the languageId inferred by the editor. The list of language Ids can be found here: https://code.visualstudio.com/docs/languages/identifiers. \nIf the file's languageId is not configured here, it defaults to the `defaultCStyled` header template. \nPlease do not delete this template. Copy it over when configuring this section. \nNote: Please keep the `defaultCStyled` as the first element in the list of all the header templates. \nFor more information, refer to the Readme.md.",
+          "description": "Configure the templates for the headers depending on the languageId inferred by the editor. The list of language Ids can be found here: https://code.visualstudio.com/docs/languages/identifiers. \nIf the file's languageId is not configured here, it defaults to the `defaultCStyled` header template. \nPlease do not delete this template. Copy it over when configuring this section. \nNote: Please keep the `defaultCStyled` as the first element in the list of all the header templates. \nFor more information, refer to the Readme.md.",
           "default": [
             {
               "defaultCStyled": {
@@ -61,7 +65,7 @@
                   "${headerPrefix} @description ${description}",
                   "${headerPrefix} @created ${createdDate}",
                   "${headerPrefix} @copyright ${copyright}",
-                  "${headerPrefix} @last-modified Tue Jan 16 2018 11:54:38 GMT-0800 (PST),
+                  "${headerPrefix} @last-modified ${lastModifiedDate}",
                   "${headerEnd}"
                 ]
               }
@@ -86,8 +90,7 @@
         },
         "topper.lastModified": {
           "type": "string",
-          "description":
-            "The key of the field in the header template. For eg: @last-modified. Topper looks for this to determine if it needs to update the value.",
+          "description": "The key of the field in the header template. For eg: @last-modified. Topper looks for this to determine if it needs to update the value.",
           "default": "@last-modified"
         }
       }
@@ -105,7 +108,12 @@
     "@types/node": "^6.0.40",
     "@types/mocha": "^2.2.32"
   },
-  "keywords": ["file header", "fileheader", "template", "code template"],
+  "keywords": [
+    "file header",
+    "fileheader",
+    "template",
+    "code template"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/sidmishraw/topper.git"

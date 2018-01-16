@@ -4,7 +4,7 @@
  * @description Watches the files that had topper add headers.
  * @created Mon Jan 15 2018 15:51:52 GMT-0800 (PST)
  * @copyright 2017 Sidharth Mishra
- * @last-modified Tue Jan 16 2018 11:56:13 GMT-0800 (PST))
+ * @last-modified Tue Jan 16 2018 11:56:13 GMT-0800 (PST)
  */
 
 //==============================================================================================

@@ -64,7 +64,7 @@ This extension contributes the following settings:
           "${headerPrefix} @author ${author}",
           "${headerPrefix} @description ${description}",
           "${headerPrefix} @created ${createdDate}",
-          "${headerPrefix} @last-modified Tue Jan 16 2018 11:55:12 GMT-0800 (PST),
+          "${headerPrefix} @last-modified ${lastModifiedDate}",
           "${headerEnd}"
         ]
       }
