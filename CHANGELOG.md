@@ -6,6 +6,10 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v0.3.2]
+
+* Fixed the issue [problem about last-modified when press cmd+s #3](https://github.com/sidmishraw/topper/issues/3). Now, topper's watcher listens to the `TextDocumentWillSaveEvent` and updates the last-modified field before the document saves.
+
 ### [v0.3.1]
 
 * Fixed the issue of Topper capturing templates of "last-modified". Now, there are strict patterns in place.

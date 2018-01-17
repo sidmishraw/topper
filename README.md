@@ -153,10 +153,13 @@ The `"key"` field can be any key combination. The command has to be `"topper.add
 
 ## Changelog
 
+### [v0.3.2]
+
+* Fixed the issue [problem about last-modified when press cmd+s #3](https://github.com/sidmishraw/topper/issues/3). Now, topper's watcher listens to the `TextDocumentWillSaveEvent` and updates the last-modified field before the document saves.
+
 ### [v0.3.1]
 
 * Fixed the issue of Topper capturing templates of "last-modified". Now, there are strict patterns in place.
-
 
 ### [v0.3.0]
 
