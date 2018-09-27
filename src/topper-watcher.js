@@ -74,8 +74,9 @@ const updateLastModifiedDate = (workspace, filePath, cbk) => {
           .getConfiguration("topper")
           .get("lastModified");
         //Tue Jan 16 2018 11:39:37 GMT-0800 (PST)
+        //Wed Sep 26 2018 21:47:26 GMT+0200 (W. Europe Daylight Time)
         const regex = new RegExp(
-          `[ ]*${lastModifiedKey}\\:{0,1}\\s+([A-Za-z]{3} [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}\\:[0-9]{2}\\:[0-9]{2} [A-Za-z]{3}\\-[0-9]{4} \\([A-Za-z]{3,}\\))\\n*`
+          `[ ]*${lastModifiedKey}\\s*.?\\s+([A-Za-z]{3} [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}\\:[0-9]{2}\\:[0-9]{2} [A-Za-z]{3}[\\-\\+][0-9]{4} \\(\\D*\\))\\n*`
         ); // the regex
         let matches = _.filter(lines, l => l.match(regex)); //l.match(/\@last\-modified\:{0,1}\s+(.*)\n*/i));
         if (!matches || (matches && matches.length < 1)) return; // no topper header present with last-updated field
