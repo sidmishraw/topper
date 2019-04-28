@@ -29,50 +29,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * extension.js
+ * extension.ts
  * @author Sidharth Mishra
- * @created Tue Feb 19 2019 17:04:35 GMT-0800 (PST)
- * @last-modified Sun Apr 07 2019 19:04:32 GMT-0700 (PDT)
+ * @created Sun Apr 07 2019 19:33:36 GMT-0700 (PDT)
+ * @last-modified Sat Apr 27 2019 23:11:28 GMT-0700 (PDT)
  */
-
-//
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-//
-var vscode = require("vscode");
-const _ = require("lodash");
-
-// topper specific import
-//
-const topper2 = require("./topperv2");
-const topperWatcher = require("./topper-watcher"); //  the watcher that watches for changes in files.
+import { ExtensionContext, workspace, commands } from 'vscode';
+import { startWatcher } from './topper/topperwatcher';
+import { CustomTemplateParameter, TOPPER, CUSTOM_TEMPLATE_PARAMETERS, getProfileName, makeAddTopHeaderCmd } from './topper/topper';
+import { addTopHeader } from './topper/service';
 
 /**
- * Invoked when the extension is activated.
- * @param {any} context
+ * Extension activation event handler.
+ * @param context the extension context
  */
-function activate(context) {
-    console.log('Congratulations, your extension "topper" is now active!');
+export function activate(context: ExtensionContext) {
+    console.info('topper is active!');
+    startWatcher();
 
-    topperWatcher.startWatcher();
+    let customTemplateParameters: CustomTemplateParameter[] | undefined = workspace.getConfiguration(TOPPER).get(CUSTOM_TEMPLATE_PARAMETERS);
+    if (!customTemplateParameters) {
+        console.info("Couldn't load the custom template parameters!");
+        return;
+    }
 
-    let profiles = vscode.workspace.getConfiguration("topper").get("customTemplateParameters");
-
-    _.forEach(profiles, p =>
-        context.subscriptions.push(
-            vscode.commands.registerCommand(`topper.addTopHeader.${Object.getOwnPropertyNames(p)[0]}`, () =>
-                topper2.addTopHeaderForProfile(Object.getOwnPropertyNames(p)[0])
-            )
-        )
-    );
+    customTemplateParameters.forEach(customTemplateParameter => {
+        let profileName: string = getProfileName(customTemplateParameter);
+        let addTopHeaderCmd: string = makeAddTopHeaderCmd(profileName);
+        console.info('Registering the command with vscode:  ${addTopHeaderCmd}');
+        context.subscriptions.push(commands.registerCommand(addTopHeaderCmd, () => addTopHeader(profileName)));
+    });
 }
 
 /**
- * Invoked when the extension is deactivated.
+ * The extension deactivation context handler
  */
-function deactivate() {
-    console.log("Topper has been deactivated.");
+export function deactivate() {
+    console.info('topper has deactivated! Bye!');
 }
-
-exports.activate = activate;
-exports.deactivate = deactivate;
