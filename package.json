@@ -16,7 +16,12 @@
     ],
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [],
+        "commands": [
+            {
+                "command": "topper.addTopHeader",
+                "title": "Topper: Add default profile header"
+            }
+        ],
         "configuration": {
             "type": "object",
             "title": "Topper configuration",
@@ -48,23 +53,6 @@
                     "description": "Configure the templates for the headers depending on the languageId inferred by the editor. The list of language Ids can be found here: https://code.visualstudio.com/docs/languages/identifiers. \nIf the file's languageId is not configured here, it defaults to the `defaultCStyled` header template. \nPlease do not delete this template. Copy it over when configuring this section. \nNote: Please keep the `defaultCStyled` as the first element in the list of all the header templates. \nFor more information, refer to the Readme.md.",
                     "default": [
                         {
-                            "defaultCStyled": {
-                                "headerBegin": "/**",
-                                "headerPrefix": "*",
-                                "headerEnd": "*/",
-                                "template": [
-                                    "${headerBegin}",
-                                    "${headerPrefix} ${fileName}",
-                                    "${headerPrefix} @author ${author}",
-                                    "${headerPrefix} @description ${description}",
-                                    "${headerPrefix} @created ${createdDate}",
-                                    "${headerPrefix} @copyright ${copyright}",
-                                    "${headerPrefix} @last-modified ${lastModifiedDate}",
-                                    "${headerEnd}"
-                                ]
-                            }
-                        },
-                        {
                             "python": {
                                 "headerBegin": "#",
                                 "headerPrefix": "#",
@@ -82,8 +70,6 @@
                         },
                         {
                             "php": {
-                                "insertAtRow": 2,
-                                "insertAtCol": 0,
                                 "headerBegin": "/*",
                                 "headerPrefix": "*",
                                 "headerEnd": "*/",

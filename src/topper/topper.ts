@@ -44,10 +44,18 @@ export const TOPPER_ADD_TOP_HEADER_CMD_BASE = 'topper.addTopHeader';
 /**
  * Generates the complete add top header command for the particular profile.
  * @param profileName the profile name
- * @returns the command string
+ * @returns the command string.
  */
 export function makeAddTopHeaderCmd(profileName: string): string {
     return `${TOPPER_ADD_TOP_HEADER_CMD_BASE}.${profileName}`;
+}
+
+/**
+ * Generates the default add top header command which is exposed to the user through the command palette.
+ * @returns the command string.
+ */
+export function defaultAddTopHeaderCmd(): string {
+    return `${TOPPER_ADD_TOP_HEADER_CMD_BASE}`;
 }
 
 /** the key for custom template parameters defined in the topper config. */

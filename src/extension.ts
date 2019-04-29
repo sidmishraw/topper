@@ -32,11 +32,19 @@
  * extension.ts
  * @author Sidharth Mishra
  * @created Sun Apr 07 2019 19:33:36 GMT-0700 (PDT)
- * @last-modified Sat Apr 27 2019 23:11:28 GMT-0700 (PDT)
+ * @last-modified Sun Apr 28 2019 23:16:19 GMT-0700 (PDT)
  */
+
 import { ExtensionContext, workspace, commands } from 'vscode';
 import { startWatcher } from './topper/topperwatcher';
-import { CustomTemplateParameter, TOPPER, CUSTOM_TEMPLATE_PARAMETERS, getProfileName, makeAddTopHeaderCmd } from './topper/topper';
+import {
+    CustomTemplateParameter,
+    TOPPER,
+    CUSTOM_TEMPLATE_PARAMETERS,
+    getProfileName,
+    makeAddTopHeaderCmd,
+    defaultAddTopHeaderCmd,
+} from './topper/topper';
 import { addTopHeader } from './topper/service';
 
 /**
@@ -53,11 +61,22 @@ export function activate(context: ExtensionContext) {
         return;
     }
 
-    customTemplateParameters.forEach(customTemplateParameter => {
+    //
+    // also register a default profile with the `topper.addTopHeader` command so that it can be exposed
+    // to the end user through the command palette.
+    //
+    customTemplateParameters.forEach((customTemplateParameter, index) => {
         let profileName: string = getProfileName(customTemplateParameter);
         let addTopHeaderCmd: string = makeAddTopHeaderCmd(profileName);
-        console.info('Registering the command with vscode:  ${addTopHeaderCmd}');
+        console.info(`Registering the command with vscode:  ${addTopHeaderCmd}`);
         context.subscriptions.push(commands.registerCommand(addTopHeaderCmd, () => addTopHeader(profileName)));
+
+        // registers the first profile as the default profile to the default add top header command,
+        // this commnad will be visible to the end user through their command palette.
+        //
+        if (index === 0) {
+            context.subscriptions.push(commands.registerCommand(defaultAddTopHeaderCmd(), () => addTopHeader(profileName)));
+        }
     });
 }
 
