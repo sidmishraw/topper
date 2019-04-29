@@ -32,7 +32,7 @@
  * extension.ts
  * @author Sidharth Mishra
  * @created Sun Apr 07 2019 19:33:36 GMT-0700 (PDT)
- * @last-modified Sun Apr 28 2019 23:16:19 GMT-0700 (PDT)
+ * @last-modified Sun Apr 28 2019 23:50:19 GMT-0700 (PDT)
  */
 
 import { ExtensionContext, workspace, commands } from 'vscode';

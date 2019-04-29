@@ -8,9 +8,13 @@ All notable changes to the "topper" extension will be documented in this file.
 
 ### [v1.0.0]
 
+**[!!!] This release has breaking changes and might need some configuration from your part for the first time you start using it –– especially on older files that were annotated with older versions of Topper. No worries for new users and new files.**
+
 -   Re-wrote the code from scratch in Typescript for better maintenance. Also got rid of the popup, it seems that the use of a keyboard shortcut is the best approach. The other way is to invoke command directly using the commands menu of vscode.
--   Externalized the date formatting for created date and last modified date.
--   Externalized the last modified date capture regex in case the user defines their custom last modified date format.
+-   The command palette now shows a command that is bound to the first profile in the list, no need for the popup –– this was made for streamlined usage. For a more streamlined approach, please use the keyboard shortcuts to the desired profiles.
+-   [CAUTION] Externalized the date formatting for created date and last modified date.
+-   [CAUTION] Externalized the last modified date capture regex in case the user defines their custom last modified date format.
+-   [CAUTION] Externalized the row and column indices to be used for insertion of the header string: use with care. Defaults to 0 for both row and col for sanity.
 
 ### [v0.4.0]
 

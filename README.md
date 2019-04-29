@@ -1,10 +1,16 @@
-# Topper README
+# Topper
+
+```
+Version: 1.0.0
+```
 
 `Topper` is a file header utility. It will add a header to the file depending on the configurations made by you.
 
 ## Features
 
-The gif below shows how to use the `Topper` extension.
+> Note: the GIF below is deprecated, will be replacing it with a new one soon.
+
+> [DEPRECATED] The gif below shows how to use the `Topper` extension. Valid for extension version <= 0.4.0
 
 ![](https://zippy.gfycat.com/LeanNeatEasternnewt.gif)
 
@@ -12,121 +18,149 @@ The gif below shows how to use the `Topper` extension.
 
 This extension contributes the following settings:
 
-- `topper.customTemplateParameters`: This configures template parameters. These parameters can be used in the header templates as placeholders.
+### `topper.customTemplateParameters`: This configures template parameters. These parameters can be used in the header templates as placeholders.
 
-  The default setting is:
+The default setting is:
 
-  ```javascript
-  [
+```json
+[
     {
-      personalProfile: {
-        author: "bulbasaur",
-        website: "bulbasaur.github.bitbucket.yababbdadado.com",
-        copyright: "None",
-        license: "None",
-        email: "ivysaur.bulbasaur@venosaur.com"
-      }
+        "personalProfile": {
+            "author": "bulbasaur",
+            "website": "bulbasaur.github.bitbucket.yababbdadado.com",
+            "copyright": "None",
+            "license": "None",
+            "email": "ivysaur.bulbasaur@venosaur.com",
+        },
     },
     {
-      officeProfile: {
-        author: "John Doe",
-        department: "Product Development",
-        email: "john.doe@doejohn.com"
-      }
-    }
-  ];
-  ```
-
-  You can add any number of profiles to the list. You also have the ability to add in any number of parameters here in your profiles. This way you can use those parameters in the header templates.
-
-- `topper.headerTemplates`: This is the list of all the header templates you configure depending upon the languages being used.
-
-  The list of language Ids can be found here: [https://code.visualstudio.com/docs/languages/identifiers](https://code.visualstudio.com/docs/languages/identifiers).
-
-  If the file's `languageId` is not configured here, it defaults to the `defaultCStyled` header template.
-
-  > Note: Please do not delete the `defaultCStyled` template. Copy it over when configuring this section.
-  > Note: Please keep the `defaultCStyled` as the first element in the list of all the header templates.
-
-  The default configuration for the header templates is:
-
-  ```javascript
-  [
-    {
-      defaultCStyled: {
-        headerBegin: "/**",
-        headerPrefix: "*",
-        headerEnd: "*/",
-        template: [
-          "${headerBegin}",
-          "${headerPrefix} ${fileName}",
-          "${headerPrefix} @author ${author}",
-          "${headerPrefix} @description ${description}",
-          "${headerPrefix} @created ${createdDate}",
-          "${headerPrefix} @last-modified ${lastModifiedDate}",
-          "${headerEnd}"
-        ]
-      }
+        "officeProfile": {
+            "author": "John Doe",
+            "department": "Product Development",
+            "email": "john.doe@doejohn.com",
+        },
     },
-    {
-      python: {
-        headerBegin: "#",
-        headerPrefix: "#",
-        headerEnd: "#",
-        template: [
-          "${headerBegin}",
-          "${headerPrefix} ${fileName}",
-          "${headerPrefix} @author ${author}",
-          "${headerPrefix} @description ${description}",
-          "${headerPrefix} @created ${createdDate}",
-          "${headerPrefix} @last-modified ${lastModifiedDate}",
-          "${headerEnd}"
-        ]
-      }
-    }
-  ];
-  ```
+];
+```
 
-  As you can already see, each header template object is of form:
+You can add any number of profiles to the list. You also have the ability to add in any number of parameters here in your profiles. This way you can use those parameters in the header templates.
 
-  ```javascript
+### `topper.headerTemplates`: This is the list of all the header templates you configure depending upon the languages being used.
+
+The list of language Ids can be found here: [https://code.visualstudio.com/docs/languages/identifiers](https://code.visualstudio.com/docs/languages/identifiers).
+
+In case the language name or ID is not found: the following header template is used:
+
+```json
+{
+    "headerBegin": "/**",
+    "headerPrefix": "*",
+    "headerEnd": "*/",
+    "template": [
+        "${headerBegin}",
+        "${headerPrefix} ${fileName}",
+        "${headerPrefix} @author ${author}",
+        "${headerPrefix} @description ${description}",
+        "${headerPrefix} @created ${createdDate}",
+        "${headerPrefix} @last-modified ${lastModifiedDate}",
+        "${headerEnd}"
+    ]
+}
+```
+
+Additionally, the default configuration for the header templates is:
+
+```json
+[
     {
-        "[languageId]": {
-            "headerBegin": string,
-            "headerPrefix": string,
-            "headerEnd": string,
-            "template": string[] // <string values with parameters>
+        "python": {
+            "headerBegin": "#",
+            "headerPrefix": "#",
+            "headerEnd": "#",
+            "template": [
+                "${headerBegin}",
+                "${headerPrefix} ${fileName}",
+                "${headerPrefix} @author ${author}",
+                "${headerPrefix} @description ${description}",
+                "${headerPrefix} @created ${createdDate}",
+                "${headerPrefix} @last-modified ${lastModifiedDate}",
+                "${headerEnd}"
+            ]
         }
     }
-  ```
+]
+```
 
-  To use the parameters inside the `template`, use the `${<parameter name>}` notation.
+As you can already see, each header template object is of form:
 
-- `topper.lastModified`: The key of the last-modified field in the header template --- `@last-modified`. Topper looks for this to determine if it needs to update the last-modified date-time value in your header. It defaults to `@last-modified`. For example, if you assign the value to `Modified`, then your header field for `Modified` should have be defined as `${headerPrefix} Modified ${lastModifiedDate}` for it to be considered by topper for automatic updation.
+```javascript
+  {
+      "[languageId]": {
+          "headerBegin": string,
+          "headerPrefix": string,
+          "headerEnd": string,
+          "template": string[] // <string values with parameters>
+      }
+  }
+```
 
-Topper has a few intrinsic template parameters:
+To use the parameters inside the `template`, use the `${<parameter name>}` notation.
 
-- `createdDate` - The date when the file was created, this is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+### [CAUTION] `topper.lastModified`: The key of the last-modified field in the header template --- `@last-modified`. Topper looks for this to determine if it needs to update the last-modified date-time value in your header. It defaults to `@last-modified`. For example, if you assign the value to `Modified`, then your header field for `Modified` should have be defined as `${headerPrefix} Modified ${lastModifiedDate}` for it to be considered by topper for automatic updation.
 
-- `lastModifiedDate` - The date when the file was modified, this too is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+### [CAUTION] `topper.lastModifiedRegex`: The regular expression used for capturing the last modified date in the header and auto-update it when the file is saved.
 
-- `fileName` - The name of the file
+Defaults to:
 
-- `fileVersion` - The VSCode maintained fileVersion
+```javascript
+'[ ]*\\@last\\-modified\\s*.?\\s+((\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}\\.\\d{3})Z([\\+\\-]?\\d{2}:\\d{2}))\\n*';
+```
+
+> Note: This configuration is dependent on the `topper.lastModified` and `topper.dateFormat` values, please make sure that both are in sync, otherwise Topper will not be able to capture the last modified field in the header and update the timestamp.
+
+### [CAUTION] `topper.dateFormat`: The format to be used for created date and last modified date values in the header. Topper uses Moment.js so please refer to the date formatting rules mentioned in moment.js. https://momentjs.com/docs/ . The default is ISO date format.
+
+Defaults to:
+
+```javascript
+'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]Z';
+```
+
+> Note: Please make sure that the last date modified regex is also in sync to the changes made to date format, otherwise Topper will not be able to automatically update the last modified timestamp in the header.
+
+### [CAUTION] `topper.insertAtRow`: The row from where to insert the header string at! Defaults to `0`.
+
+> Note: Please override this only if required, the default value is a SANE value. thanks :)
+
+### [CAUTION] `topper.insertAtCol`: The column from where to insert the header string at! Defaults to 0.
+
+> Note: Please override this only if required, the default value is a SANE value. thanks :)
+
+## Topper's intrinsic parameters
+
+Topper has the following intrinsic template parameters. The values of these parameters are extracted from the underlying OS and the file metadata:
+
+-   `createdDate` - The date when the file was created, this is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+
+-   `lastModifiedDate` - The date when the file was modified, this too is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+
+-   `fileName` - The name of the file.
+
+-   `fileVersion` - The VSCode maintained file version.
 
 ## Defining a custom keyboard shortcut
 
 To define a custom keyboard shortcut do the following:
 
-- Preferences -> Keyboard Shortcuts -> Open `keybindings.json`
+-   Preferences -> Keyboard Shortcuts -> Open `keybindings.json`
 
-- Add the following entry:
+-   Add the following entry:
 
 ```json
 // This opens up the interactive Topper with all the popups.
 {
-  "key": "cmd+shift+t",
-  "command": "topper.addTopHeader"
+    "key": "cmd+shift+t",
+    "command": "topper.addTopHeader"
 }
 ```
 
@@ -135,8 +169,8 @@ or
 ```json
 // Defines the shortcut for the specific profile. Now only that specific profile is invoked. No annoying popups!
 {
-  "key": "<your-key-combination>",
-  "command": "topper.addTopHeader.<your-profile-name>"
+    "key": "<your-key-combination>",
+    "command": "topper.addTopHeader.<your-profile-name>"
 }
 ```
 
@@ -145,8 +179,8 @@ For eg:
 ```json
 // Invokes Topper using the `personalProfile` directly, skipping all the interactive popups/dialog boxes.
 {
-  "key": "cmd+shift+t 1",
-  "command": "topper.addTopHeader.personalProfile"
+    "key": "cmd+shift+t 1",
+    "command": "topper.addTopHeader.personalProfile"
 }
 ```
 
@@ -154,72 +188,10 @@ The `"key"` field can be any key combination. The command has to be `"topper.add
 
 ## Changelog
 
-### [v0.4.0]
+The change log is available at: [change-log](./CHANGELOG.md)
 
-- Merged pull request from @Drakesinger into master to allow more flexible formats for the `last modified` field in the headers. Thanks @Drakesinger for the PR!
-
-- Updated the readme document with more information about the `topper.lastModified` contribution point. Since, I had forgotten to add the description of this contribution point in the document I believe some of the users might have found it difficult to configure the `lastModified` field name in their headers. Sorry!
-
-### [v0.3.2]
-
-- Fixed the issue [problem about last-modified when press cmd+s #3](https://github.com/sidmishraw/topper/issues/3). Now, topper's watcher listens to the `TextDocumentWillSaveEvent` and updates the last-modified field before the document saves.
-
-### [v0.3.1]
-
-- Fixed the issue of Topper capturing templates of "last-modified". Now, there are strict patterns in place.
-
-### [v0.3.0]
-
-- Fixed issue where the `@last-modified` field in the header was not getting updated automatically. Now, there is a configuration field `topper.lastModified` where the users can specify their custom field names for `last-modified` incase they do not use `@last-modified`. The default value is `@last-modified`.
-
-> Caveats: The implementation is choppy in some aspects because of limited support from VS Code APIs. Expect a better implementation in the next version.
-
-- Code cleanup.
-
-### [v0.2.0]
-
-- Code cleanup.
-
-- Addition of profile specific shortcuts added to `keybinding.json` of VSCode:
-
-```json
-  {
-    "key": "cmd+shift+t 1",
-    "command": "topper.addTopHeader.personalProfile"
-  },
-  {
-    "key": "shift+cmd+t 2",
-    "command": "topper.addTopHeader.officeProfile"
-  }
-```
-
-The first key combination is `Command + Shift + T` followed by a `1` or `2` depending on the profile. The user is free to bind any profile to any key combination.
-The commandId is of the form `topper.addTopHeader.<your-profile-name>`.
-
-### [v0.1.0]
-
-- Stable release.
-
-### [v0.0.3]
-
-- Changed the extension's command from `extension.addTopHeader` to `topper.addTopHeader`. To make it easier for customized keybinding.
-
-- Code cleanup.
-
-### [v0.0.2]
-
-- Added support for multi line strings as values for the custom template parameters.
-
-- Updated `lastModifiedDate` to be fetched from the underlying OS. This is the true last modified date.
-
-### [v0.0.1]
-
-- Initial release of `Topper` extension. [Alpha]
-
-## P.S
-
-In case of any suggestions or issues please email me at [**sidharth.mishra@sjsu.edu**](mailto:sidharth.mishra@sjsu.edu)
+In case of any suggestions or issues please feel free to create an issue on the Github repo.
 
 ## References
 
-- Template style configuration idea inspired by [https://github.com/doi/fileheadercomment](https://github.com/doi/fileheadercomment)
+-   Template style configuration idea inspired by [https://github.com/doi/fileheadercomment](https://github.com/doi/fileheadercomment)
