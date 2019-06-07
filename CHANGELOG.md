@@ -6,6 +6,10 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v1.1.0]
+
+-   Added a new configuration parameter called `topper.defaultHeaderTemplate`. This parameter allows to customize the default header template across all the languages in case a custom language specific template is not defined yet. The language ID used for the default header template is `default` and it should not be tinkered with!!!
+
 ### [v1.0.0]
 
 **[!!!] This release has breaking changes and might need some configuration from your part for the first time you start using it –– especially on older files that were annotated with older versions of Topper. No worries for new users and new files.**

@@ -2,7 +2,7 @@
     "name": "topper",
     "displayName": "topper",
     "description": "A fileheader utility.",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "publisher": "sidmishraw",
     "engines": {
         "vscode": "^1.13.0"
@@ -47,6 +47,27 @@
                             }
                         }
                     ]
+                },
+                "topper.defaultHeaderTemplate": {
+                    "type": "object",
+                    "description": "The default header template that can be used for all languages if no-custom template is defined. The default language ID is `default`. Please don't use some other language ID for the default header template.",
+                    "default": {
+                        "default": {
+                            "headerBegin": "/**",
+                            "headerPrefix": "*",
+                            "headerEnd": "*/",
+                            "template": [
+                                "${headerBegin}",
+                                "${headerPrefix} ${fileName}",
+                                "${headerPrefix} @author ${author}",
+                                "${headerPrefix} @description ${description}",
+                                "${headerPrefix} @created ${createdDate}",
+                                "${headerPrefix} @copyright ${copyright}",
+                                "${headerPrefix} @last-modified ${lastModifiedDate}",
+                                "${headerEnd}"
+                            ]
+                        }
+                    }
                 },
                 "topper.headerTemplates": {
                     "type": "array",

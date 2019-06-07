@@ -52,6 +52,8 @@ import {
     DEFAULT_DATETIME_FORMAT,
     INSERT_AT_ROW,
     INSERT_AT_COL,
+    DEFAULT_HEADER_TEMPLATE,
+    DEFAULT_LANGUAGE_ID,
 } from './topper';
 import { Optional } from '../util/optional';
 import { stat } from 'fs';
@@ -145,6 +147,12 @@ function getSelectedHeaderTemplate(headerTemplates: HeaderTemplate[], languageId
  * @returns the default header template, used mostly for C-styled languages.
  */
 function getDefaultHeaderTemplate(): LanguageHeaderTemplate {
+    const defaultHeaderTemplate: HeaderTemplate | undefined = workspace.getConfiguration(TOPPER).get(DEFAULT_HEADER_TEMPLATE);
+    if (defaultHeaderTemplate) {
+        // return the configured default header template if it is available, else
+        // fallback to the hard-coded default.
+        return defaultHeaderTemplate[DEFAULT_LANGUAGE_ID];
+    }
     return new LanguageHeaderTemplate('/**', '*', '*/', [
         '${headerBegin}',
         '${headerPrefix} ${fileName}',

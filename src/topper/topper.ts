@@ -64,6 +64,12 @@ export const CUSTOM_TEMPLATE_PARAMETERS = 'customTemplateParameters';
 /** the key for header templates defined in the topper config. */
 export const HEADER_TEMPLATES = 'headerTemplates';
 
+/** the key for the default header template used for all the languages if no custom template is defined. */
+export const DEFAULT_HEADER_TEMPLATE = 'defaultHeaderTemplate';
+
+/** the default language ID to be used for the default header template. */
+export const DEFAULT_LANGUAGE_ID = 'default';
+
 // list of intrinsic parameter names that topper provides
 //
 /** the file name. It is a key whose value is defined by topper. */

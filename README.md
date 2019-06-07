@@ -1,18 +1,14 @@
 # Topper
 
 ```
-Version: 1.0.0
+Version: 1.1.0
 ```
 
 `Topper` is a file header utility. It will add a header to the file depending on the configurations made by you.
 
 ## Features
 
-> Note: the GIF below is deprecated, will be replacing it with a new one soon.
-
-> [DEPRECATED] The gif below shows how to use the `Topper` extension. Valid for extension version <= 0.4.0
-
-![](https://zippy.gfycat.com/LeanNeatEasternnewt.gif)
+Make yourself a language and profile specific beautiful or helpful file header. Have fun!
 
 ## Extension Settings
 
@@ -44,6 +40,28 @@ The default setting is:
 ```
 
 You can add any number of profiles to the list. You also have the ability to add in any number of parameters here in your profiles. This way you can use those parameters in the header templates.
+
+### `topper.defaultHeaderTemplate`: This configuration allows you to set a default header template across all the langauges in case you haven't defined a custom language specific header template. The language ID used for this header template is `default` and it should not be tinkered with. By default its value is:
+
+```json
+{
+    "default": {
+        "headerBegin": "/**",
+        "headerPrefix": "*",
+        "headerEnd": "*/",
+        "template": [
+            "${headerBegin}",
+            "${headerPrefix} ${fileName}",
+            "${headerPrefix} @author ${author}",
+            "${headerPrefix} @description ${description}",
+            "${headerPrefix} @created ${createdDate}",
+            "${headerPrefix} @copyright ${copyright}",
+            "${headerPrefix} @last-modified ${lastModifiedDate}",
+            "${headerEnd}"
+        ]
+    }
+}
+```
 
 ### `topper.headerTemplates`: This is the list of all the header templates you configure depending upon the languages being used.
 
