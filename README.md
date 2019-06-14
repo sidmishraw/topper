@@ -1,7 +1,7 @@
 # Topper
 
 ```
-Version: 1.1.0
+Version: 1.2.0
 ```
 
 `Topper` is a file header utility. It will add a header to the file depending on the configurations made by you.
@@ -203,6 +203,43 @@ For eg:
 ```
 
 The `"key"` field can be any key combination. The command has to be `"topper.addTopHeader"`.
+
+## Adding license text to header
+
+Currently 4 license types are supported:
+
+-   Apache 2.0 -> code = APACHE_2_0
+-   MIT -> code = MIT
+-   BSD 3 Clause -> code = BSD_3_CLAUSE_LICENSE
+-   GNU -> code = GNU
+
+-   Default license type is MIT.
+-   To add a license to the header, define a `license` field in your profile specific parameters and use the respective code of the license. If an invalid code is used, MIT is used by default.
+-   The license text uses the name defined in the profile's `author` field as the author name. If `author` field is not defined, then, `Author's Full Name` is printed as is.
+
+For example:
+
+```json
+[
+    {
+        "personalProfile": {
+            "author": "bulbasaur",
+            "website": "bulbasaur.github.bitbucket.yababbdadado.com",
+            "copyright": "None",
+            "license": "MIT",
+            "email": "ivysaur.bulbasaur@venosaur.com",
+        },
+    },
+    {
+        "officeProfile": {
+            "author": "John Doe",
+            "department": "Product Development",
+            "email": "john.doe@doejohn.com",
+            "license": "GNU"
+        },
+    },
+];
+```
 
 ## Changelog
 
