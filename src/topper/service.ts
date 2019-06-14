@@ -59,6 +59,7 @@ import { Optional } from '../util/optional';
 import { stat } from 'fs';
 import * as Moment from 'moment';
 import * as BlueBird from 'bluebird';
+import { createLicenseText, getAsLicenseType } from './license';
 
 /**
  * Adds the top header for the given profile name.
@@ -230,9 +231,19 @@ function makeHeaderString(
 
             let tokenValue: string = '';
 
+            let author: string | undefined = selectedTemplateParameter['author'];
+            if (!author) author = "Author's Full Name goes here";
+
             if (tokenName in selectedTemplateParameter) {
                 // if the token name is present in the profile specific template parameters
                 tokenValue = selectedTemplateParameter[tokenName];
+                if (tokenName === 'license') {
+                    // special handling for creating license text
+                    // get the license text for given license type
+                    //
+                    let licenseText = createLicenseText(author, getAsLicenseType(tokenValue));
+                    tokenValue = licenseText;
+                }
             } else if (tokenName in selectedHeaderTemplate) {
                 // if the token name is present in the language specific header templates
                 switch (tokenName) {

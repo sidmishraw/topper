@@ -6,6 +6,17 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v1.2.0]
+
+-   Added license text generation for header. Added 4 license types:
+    -   Apache 2.0 -> code = APACHE_2_0
+    -   MIT -> code = MIT
+    -   BSD 3 Clause -> code = BSD_3_CLAUSE_LICENSE
+    -   GNU -> code = GNU
+-   Default license is MIT
+-   To add a license to the header, define a `license` field in your profile specific and use the respective code of the license. If an invalid code is used, MIT is used by default.
+-   The license text uses the name defined in the profile's `author` field as the author name. If `author` field is not defined, then, `Author's Full Name` is printed as is.
+
 ### [v1.1.0]
 
 -   Added a new configuration parameter called `topper.defaultHeaderTemplate`. This parameter allows to customize the default header template across all the languages in case a custom language specific template is not defined yet. The language ID used for the default header template is `default` and it should not be tinkered with!!!
