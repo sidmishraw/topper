@@ -32,7 +32,7 @@
  * topper.ts
  * @author Sidharth Mishra
  * @created Sun Apr 14 2019 22:48:09 GMT-0700 (PDT)
- * @last-modified Sat Apr 27 2019 22:41:58 GMT-0700 (PDT)
+ * @last-modified Wed Apr 28 2021 23:50:40 -0700
  */
 
 /** the name of the extension. */
@@ -242,10 +242,21 @@ export class LanguageHeaderTemplate {
 export class TopperProvidedParam {
     private _createdDate: string;
     private _lastModifiedDate: string;
-    private readonly _fileName: string;
+    private readonly _fileName: string; // the file-name only
     private readonly _fileVersion: string | number;
+    private readonly _pathFromRepositoryRoot: string; // path from the repository root
+    private readonly _absFilePath: string; // the absolute file-path
+    private readonly _repositoryRootPath: string; // the repository's root file-system path
 
-    constructor(createdDate: string | null, lastModifiedDate: string | null, fileName: string, fileVersion: string | number) {
+    constructor(
+        createdDate: string | null,
+        lastModifiedDate: string | null,
+        fileName: string,
+        fileVersion: string | number,
+        pathFromRepositoryRoot: string,
+        absFilePath: string,
+        repositoryRootPath: string
+    ) {
         if (createdDate) this._createdDate = createdDate;
         else this._createdDate = '';
 
@@ -254,6 +265,9 @@ export class TopperProvidedParam {
 
         this._fileName = fileName;
         this._fileVersion = fileVersion;
+        this._pathFromRepositoryRoot = pathFromRepositoryRoot;
+        this._absFilePath = absFilePath;
+        this._repositoryRootPath = repositoryRootPath;
     }
 
     get createdDate(): string {
@@ -278,5 +292,17 @@ export class TopperProvidedParam {
 
     get fileVersion(): string | number {
         return this._fileVersion;
+    }
+
+    get pathFromRepositoryRoot(): string {
+        return this._pathFromRepositoryRoot;
+    }
+
+    get absFilePath(): string {
+        return this._absFilePath;
+    }
+
+    get repositoryRootPath(): string {
+        return this._repositoryRootPath;
     }
 }

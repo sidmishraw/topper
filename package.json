@@ -2,10 +2,10 @@
     "name": "topper",
     "displayName": "topper",
     "description": "A fileheader utility.",
-    "version": "1.2.0",
+    "version": "1.5.0",
     "publisher": "sidmishraw",
     "engines": {
-        "vscode": "^1.13.0"
+        "vscode": "^1.55.0"
     },
     "categories": [
         "Snippets",
@@ -152,9 +152,11 @@
         "@types/mocha": "^5.2.1",
         "@types/node": "^8.10.39",
         "@types/resolve": "0.0.8",
+        "@types/vscode": "^1.55.0",
         "cross-env": "^5.1.6",
-        "mocha": "^5.2.0",
-        "vscode": "^1.1.33"
+        "mocha": "^8.3.2",
+        "typescript": "^4.2.4",
+        "vscode-test": "^1.5.2"
     },
     "keywords": [
         "file header",
