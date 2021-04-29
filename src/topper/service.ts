@@ -32,34 +32,34 @@
  * service.ts
  * @author Sidharth Mishra
  * @created Sat Apr 27 2019 16:38:51 GMT-0700 (PDT)
- * @last-modified Sun Apr 28 2019 22:25:53 GMT-0700 (PDT)
+ * @last-modified Wed Apr 28 2021 23:50:11 -0700
  */
 
-import * as path from 'path';
-import { workspace, window, TextDocument, TextEditor, Position } from 'vscode';
-import {
-    TextDocumentMetadata,
-    TopperProvidedParam,
-    TOPPER,
-    CUSTOM_TEMPLATE_PARAMETERS,
-    HEADER_TEMPLATES,
-    HeaderTemplate,
-    CustomTemplateParameter,
-    getProfileName,
-    ProfileTemplate,
-    LanguageHeaderTemplate,
-    DATE_FORMAT,
-    DEFAULT_DATETIME_FORMAT,
-    INSERT_AT_ROW,
-    INSERT_AT_COL,
-    DEFAULT_HEADER_TEMPLATE,
-    DEFAULT_LANGUAGE_ID,
-} from './topper';
-import { Optional } from '../util/optional';
+import * as BlueBird from 'bluebird';
 import { stat } from 'fs';
 import * as Moment from 'moment';
-import * as BlueBird from 'bluebird';
+import * as path from 'path';
+import { Position, TextDocument, TextEditor, window, workspace } from 'vscode';
+import { Optional } from '../util/optional';
 import { createLicenseText, getAsLicenseType } from './license';
+import {
+    CustomTemplateParameter,
+    CUSTOM_TEMPLATE_PARAMETERS,
+    DATE_FORMAT,
+    DEFAULT_DATETIME_FORMAT,
+    DEFAULT_HEADER_TEMPLATE,
+    DEFAULT_LANGUAGE_ID,
+    getProfileName,
+    HeaderTemplate,
+    HEADER_TEMPLATES,
+    INSERT_AT_COL,
+    INSERT_AT_ROW,
+    LanguageHeaderTemplate,
+    ProfileTemplate,
+    TextDocumentMetadata,
+    TOPPER,
+    TopperProvidedParam,
+} from './topper';
 
 /**
  * Adds the top header for the given profile name.
@@ -79,7 +79,26 @@ export function addTopHeader(profileName: string) {
 
     const documentMetadata = extractFileMetadata(editor.document);
 
-    const intrinsicParams = new TopperProvidedParam(null, null, documentMetadata.fileName, documentMetadata.fileVersion);
+    let repositoryRootPath = ''; // the repository root dir
+    let pathFromRepositoryRoot = ''; // relative to repository root dir
+
+    if (workspace.workspaceFolders !== undefined && workspace.workspaceFolders !== null && workspace.workspaceFolders.length > 0) {
+        repositoryRootPath = workspace.workspaceFolders[0].uri.fsPath;
+
+        if (repositoryRootPath !== null && repositoryRootPath !== undefined) {
+            pathFromRepositoryRoot = path.relative(repositoryRootPath, documentMetadata.filePath);
+        }
+    }
+
+    const intrinsicParams = new TopperProvidedParam(
+        null,
+        null,
+        documentMetadata.fileName,
+        documentMetadata.fileVersion,
+        pathFromRepositoryRoot,
+        documentMetadata.filePath,
+        repositoryRootPath
+    );
 
     const headerTemplates: HeaderTemplate[] | undefined = workspace.getConfiguration(TOPPER).get(HEADER_TEMPLATES);
     const customTemplateParameters: CustomTemplateParameter[] | undefined = workspace.getConfiguration(TOPPER).get(CUSTOM_TEMPLATE_PARAMETERS);
@@ -89,7 +108,7 @@ export function addTopHeader(profileName: string) {
     }
 
     let selectedTemplateParameter: CustomTemplateParameter | undefined = customTemplateParameters
-        .filter(customTemplateParameter => getProfileName(customTemplateParameter) === profileName)
+        .filter((customTemplateParameter) => getProfileName(customTemplateParameter) === profileName)
         .find((_, index) => index === 0);
 
     if (!selectedTemplateParameter) {
@@ -110,7 +129,7 @@ export function addTopHeader(profileName: string) {
     fetchAndUpdateCreatedAndModifiedDates(intrinsicParams, documentMetadata.filePath)
         .then(() => makeHeaderString(selectedHeaderTemplate, profileTemplate, intrinsicParams, headerLines))
         .then((value: { r: number; c: number }) => publishHeaderString(editor, value.r, value.c, headerLines.join('\n')))
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 }
 
 /**
@@ -173,7 +192,7 @@ function getDefaultHeaderTemplate(): LanguageHeaderTemplate {
  * @returns a bluebird promise that signals that intrinsic parameters have been updated.
  */
 function fetchAndUpdateCreatedAndModifiedDates(intrinsicParams: TopperProvidedParam, filePath: string): BlueBird<void> {
-    return BlueBird.promisify(stat)(filePath).then(fileStats => {
+    return BlueBird.promisify(stat)(filePath).then((fileStats) => {
         let dateFormat: string | undefined = workspace.getConfiguration(TOPPER).get(DATE_FORMAT);
         if (!dateFormat) {
             dateFormat = DEFAULT_DATETIME_FORMAT;
@@ -213,18 +232,26 @@ function makeHeaderString(
 ): BlueBird<{ r: number; c: number }> {
     const template = selectedHeaderTemplate.template;
 
-    template.forEach(templateLine => {
+    template.forEach((templateLine) => {
         let tokens = templateLine.split(' '); // list of all the tokens in the template line
         let headerLine: string[] = [];
 
-        tokens.filter(token => {
+        tokens.filter((token) => {
             if (!token.startsWith('${')) {
                 headerLine.push(token);
                 return;
             }
 
-            let tokenName: string = Optional.ofNullable(token.match(/\$\{(.*)\}/))
-                .map(match => {
+            // TODO(Sid): Enhancement in v2
+            // non-greedy to handle multiple template-variables
+            // ${pathFromRepositoryRoot}/${fileName}
+            // will yield two tokens:
+            // - pathFromRepositoryRoot
+            // - fileName
+            // and handle multiple template-variables in one line
+            //
+            let tokenName: string = Optional.ofNullable(token.match(/\$\{(.*?)\}/)) // takes the first token and ignores others at the moment
+                .map((match) => {
                     if (match) return match[1];
                 })
                 .orElse(token);
@@ -270,6 +297,15 @@ function makeHeaderString(
                         break;
                     case 'fileVersion':
                         tokenValue = `${intrinsicParams.fileVersion}`;
+                        break;
+                    case 'pathFromRepositoryRoot':
+                        tokenValue = intrinsicParams.pathFromRepositoryRoot;
+                        break;
+                    case 'absFilePath':
+                        tokenValue = intrinsicParams.absFilePath;
+                        break;
+                    case 'repositoryRootPath':
+                        tokenValue = intrinsicParams.repositoryRootPath;
                         break;
                     case 'lastModifiedDate':
                         tokenValue = intrinsicParams.lastModifiedDate;
@@ -317,7 +353,7 @@ function makeHeaderString(
  * @returns Bluebird void marker promise that signifies success or failure!
  */
 function publishHeaderString(editor: TextEditor, rowIndex: number, colIndex: number, headerString: string): BlueBird<void> {
-    editor.edit(editBuilder => {
+    editor.edit((editBuilder) => {
         editBuilder.insert(new Position(rowIndex, colIndex), `${headerString}\n\n`);
     });
     return new BlueBird((_1, _2) => null);

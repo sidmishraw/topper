@@ -105,6 +105,24 @@ Additionally, the default configuration for the header templates is:
                 "${headerEnd}"
             ]
         }
+    },
+    {
+        "xml": {
+            "headerBegin": "<!--",
+            "headerPrefix": "*",
+            "headerEnd": "-->",
+            "template": [
+                "${headerBegin}",
+                "${headerPrefix} @FileName ${fileName}",
+                "${headerPrefix} @PathFromRepositoryRoot ${pathFromRepositoryRoot}",
+                "${headerPrefix} @AbsPath ${absFilePath}",
+                "${headerPrefix} @RepositoryRootPath ${repositoryRootPath}",
+                "${headerPrefix} @Created ${author} ${createdDate}",
+                "${headerPrefix} @Modified ${author} ${lastModifiedDate}",
+                "${headerPrefix} @Description ${description}",
+                "${headerEnd}"
+            ]
+        }
     }
 ]
 ```
@@ -132,6 +150,7 @@ Defaults to:
 
 ```javascript
 '[ ]*\\@last\\-modified\\s*.?\\s+((\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}\\.\\d{3})Z([\\+\\-]?\\d{2}:\\d{2}))\\n*';
+
 ```
 
 > Note: This configuration is dependent on the `topper.lastModified` and `topper.dateFormat` values, please make sure that both are in sync, otherwise Topper will not be able to capture the last modified field in the header and update the timestamp.
@@ -142,6 +161,7 @@ Defaults to:
 
 ```javascript
 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]Z';
+
 ```
 
 > Note: Please make sure that the last date modified regex is also in sync to the changes made to date format, otherwise Topper will not be able to automatically update the last modified timestamp in the header.
@@ -165,6 +185,12 @@ Topper has the following intrinsic template parameters. The values of these para
 -   `fileName` - The name of the file.
 
 -   `fileVersion` - The VSCode maintained file version.
+
+-   `pathFromRepositoryRoot` - The path of the file from the current workspace (or project) root. For example, if you're working on file `/project/dir1/file1.xml` then this will give `dir1/file1.xml`. This is a relative path from your workspace's root.
+
+-   `absFilePath` - This is the absolute path of the file obtained by querying the underlying OS Filesystem.
+
+-   `repositoryRootPath` - This is the root path of the workspace (or repository or project).
 
 ## Defining a custom keyboard shortcut
 

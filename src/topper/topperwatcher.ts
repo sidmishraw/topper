@@ -32,7 +32,7 @@
  * topperwatcher.ts
  * @author Sidharth Mishra
  * @created Sun Apr 14 2019 23:14:31 GMT-0700 (PDT)
- * @last-modified Sat Apr 27 2019 15:52:39 GMT-0700 (PDT)
+ * @last-modified Wed Apr 28 2021 23:49:94 -0700
  */
 
 import { Range, workspace, Position, window } from 'vscode';
@@ -52,7 +52,7 @@ import * as Moment from 'moment';
  * There is a possiblity vscode might ignore the `TextDocumentWillSaveEvent`, if so, then the watcher cannot do anything.
  */
 export function startWatcher() {
-    workspace.onWillSaveTextDocument(willSaveEvent => {
+    workspace.onWillSaveTextDocument((willSaveEvent) => {
         try {
             const changedFileUri = willSaveEvent.document.uri;
             console.info(`Going to update the file at: ${changedFileUri.fsPath}`);
@@ -69,7 +69,7 @@ export function startWatcher() {
  */
 function updateLastModifiedDate(filePath: string) {
     try {
-        workspace.openTextDocument(filePath).then(modifiedTextDocument => {
+        workspace.openTextDocument(filePath).then((modifiedTextDocument) => {
             try {
                 let lines = modifiedTextDocument.getText().split(/\n/);
                 let lastModifiedKey: string | undefined = workspace.getConfiguration(TOPPER).get(LAST_MODIFIED_DATE_KEY);
@@ -86,7 +86,7 @@ function updateLastModifiedDate(filePath: string) {
                     lastModifiedRegex = DEFAULT_LAST_MODIFIED_CAPURE_REGEX;
                 }
 
-                let lastModifiedDateLine = lines.filter(line => line.match(lastModifiedRegex)).find((_, index) => index == 0);
+                let lastModifiedDateLine = lines.filter((line) => line.match(lastModifiedRegex)).find((_, index) => index == 0);
                 if (!lastModifiedDateLine) {
                     console.info('no topper header present with last-updated field');
                     return;
@@ -125,7 +125,7 @@ function updateLastModifiedDate(filePath: string) {
 
                 // Have the editor replace the old datetime with the current datetime.
                 //
-                editor.edit(edit => {
+                editor.edit((edit) => {
                     try {
                         let dateFormat: string | undefined = workspace.getConfiguration(TOPPER).get(DATE_FORMAT);
                         if (!dateFormat) {
