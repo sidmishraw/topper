@@ -153,8 +153,8 @@
         "@types/node": "^8.10.39",
         "@types/resolve": "0.0.8",
         "cross-env": "^5.1.6",
-        "mocha": "^5.2.0",
-        "vscode": "^1.1.33"
+        "mocha": "^8.3.2",
+        "vscode": "^0.9.9"
     },
     "keywords": [
         "file header",
