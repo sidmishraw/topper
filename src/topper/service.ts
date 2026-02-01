@@ -192,13 +192,14 @@ function getDefaultHeaderTemplate(): LanguageHeaderTemplate {
  * @returns a bluebird promise that signals that intrinsic parameters have been updated.
  */
 function fetchAndUpdateCreatedAndModifiedDates(intrinsicParams: TopperProvidedParam, filePath: string): BlueBird<void> {
-    return BlueBird.promisify(stat)(filePath).then((fileStats) => {
+    return BlueBird.promisify(stat)(filePath).then((fileStats: unknown) => {
+        const stats = fileStats as { birthtime: Date; mtime: Date } | undefined;
         let dateFormat: string | undefined = workspace.getConfiguration(TOPPER).get(DATE_FORMAT);
         if (!dateFormat) {
             dateFormat = DEFAULT_DATETIME_FORMAT;
         }
 
-        if (!fileStats) {
+        if (!stats) {
             let now: string | undefined = Moment().format(dateFormat);
             if (!now) {
                 console.error("Couldn't fetch the last modified datetime!");
@@ -207,8 +208,8 @@ function fetchAndUpdateCreatedAndModifiedDates(intrinsicParams: TopperProvidedPa
             intrinsicParams.createdDate = now;
             intrinsicParams.lastModifiedDate = now;
         } else {
-            const createdDateTime: Date = fileStats.birthtime;
-            const modifiedDateTime: Date = fileStats.mtime;
+            const createdDateTime: Date = stats.birthtime;
+            const modifiedDateTime: Date = stats.mtime;
 
             intrinsicParams.createdDate = Moment(createdDateTime).format(dateFormat);
             intrinsicParams.lastModifiedDate = Moment(modifiedDateTime).format(dateFormat);
