@@ -1,7 +1,7 @@
 # Topper
 
 ```
-Version: 1.2.0
+Version: 1.6.1
 ```
 
 `Topper` is a file header utility. It will add a header to the file depending on the configurations made by you.
@@ -57,6 +57,7 @@ You can add any number of profiles to the list. You also have the ability to add
             "${headerPrefix} @created ${createdDate}",
             "${headerPrefix} @copyright ${copyright}",
             "${headerPrefix} @last-modified ${lastModifiedDate}",
+            "${headerPrefix} @last-modified-by ${author}",
             "${headerEnd}"
         ]
     }
@@ -174,6 +175,26 @@ Defaults to:
 
 > Note: Please override this only if required, the default value is a SANE value. thanks :)
 
+### `topper.lastModifiedBy`: The key of the last-modified-by field in the header template. Topper looks for this to determine if it needs to update the last-modified-by value in your header. Defaults to `@last-modified-by`.
+
+### `topper.lastModifiedByRegex`: The regular expression used for capturing the last-modified-by user info in the header and auto-update it when the file is saved. Must include a capture group for the user value.
+
+Defaults to:
+
+```javascript
+'[ ]*\\@last\\-modified\\-by\\s*.?\\s+(.+?)\\s*$';
+```
+
+### `topper.enableLastModifiedByUpdate`: Enable or disable automatic updating of the `@last-modified-by` field on file save. Defaults to `true`.
+
+When enabled, Topper will automatically update the `@last-modified-by` field with the current user's identity using a tiered detection approach:
+
+1. **Git config** - Uses `user.name` and `user.email` from git configuration (preferred for collaborative repos)
+2. **OS user** - Falls back to `os.userInfo()` for non-git projects
+3. **Default** - Uses `Unknown <unknown-user@example.com>` if neither is available
+
+The format is `Name <email>` when email is available, otherwise just `Name`.
+
 ## Topper's intrinsic parameters
 
 Topper has the following intrinsic template parameters. The values of these parameters are extracted from the underlying OS and the file metadata:
@@ -181,6 +202,8 @@ Topper has the following intrinsic template parameters. The values of these para
 -   `createdDate` - The date when the file was created, this is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
 
 -   `lastModifiedDate` - The date when the file was modified, this too is obtained from the underlying OS. If the file is `Untitled-x` or unsaved, the created time defaults to the time `Topper: Add Header` command was invoked.
+
+-   `lastModifiedBy` - The user who last modified the file. This is automatically updated on file save using git config, OS user info, or a default fallback. See `topper.enableLastModifiedByUpdate` configuration.
 
 -   `fileName` - The name of the file.
 
