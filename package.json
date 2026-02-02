@@ -2,7 +2,7 @@
     "name": "topper",
     "displayName": "topper",
     "description": "A fileheader utility.",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "publisher": "sidmishraw",
     "engines": {
         "vscode": "^1.108.0"
@@ -156,7 +156,7 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "tsc -p ./",
+        "vscode:prepublish": "tsc -p ./ && npm run copy",
         "compile": "tsc --watch -p ./",
         "copy": "cp -r ./src/resources ./out/src",
         "clean": "rm -r ./out/src/resources",

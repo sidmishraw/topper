@@ -6,6 +6,10 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v1.6.1]
+
+-   Fixed packaging issue where license resource files were missing from the VSIX, causing "command not found" error.
+
 ### [v1.6.0]
 
 -   Added `@last-modified-by` auto-update feature. This field tracks who last modified a file, similar to how `@last-modified` tracks when.
