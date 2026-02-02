@@ -134,7 +134,7 @@ function getBsd3ClauseLicenseText(licenseTemplate: LicenseTemplate): string {
         let licenseText = readFileSync(resolve(__dirname, '../resources/bsd-3.0.txt'), 'utf8');
         return licenseTemplate.render(licenseText);
     } catch (e) {
-        console.error('Error: ', e.stack);
+        console.error('Error: ', e instanceof Error ? e.stack : e);
     }
     return `COULDN'T LOAD BSD 3 CLAUSE LICENSE`;
 }
@@ -146,7 +146,7 @@ function getGnuLicenseText(licenseTemplate: LicenseTemplate): string {
         let licenseText = readFileSync(resolve(__dirname, '../resources/gnu.txt'), 'utf8');
         return licenseTemplate.render(licenseText);
     } catch (e) {
-        console.error('Error: ', e.stack);
+        console.error('Error: ', e instanceof Error ? e.stack : e);
     }
     return `COULDN'T LOAD GNU LICENSE`;
 }
@@ -158,7 +158,7 @@ function getApache2LicenseText(licenseTemplate: LicenseTemplate): string {
         let licenseText = readFileSync(resolve(__dirname, '../resources/apache-2.0.txt'), 'utf8');
         return licenseTemplate.render(licenseText);
     } catch (e) {
-        console.error('Error: ', e.stack);
+        console.error('Error: ', e instanceof Error ? e.stack : e);
     }
     return `COULDN'T LOAD APACHE 2.0 LICENSE`;
 }
@@ -170,7 +170,7 @@ function getMitLicenseText(licenseTemplate: LicenseTemplate): string {
         let licenseText = readFileSync(resolve(__dirname, '../resources/mit.txt'), 'utf8');
         return licenseTemplate.render(licenseText);
     } catch (e) {
-        console.error('Error: ', e.stack);
+        console.error('Error: ', e instanceof Error ? e.stack : e);
     }
     return `COULDN'T LOAD MIT LICENSE`;
 }

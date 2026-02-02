@@ -1,7 +1,39 @@
 .vscode/**
 .vscode-test/**
-test/**
+.claude/**
+.idea/**
+.git/**
 .gitignore
+
+# Source files (compiled JS is in out/)
+src/**
+docs/**
+scripts/**
+
+# Dependencies (bundled at runtime)
+node_modules/**
+
+# Build artifacts
+*.vsix
+**/*.ts
+!out/**/*.js
+**/*.map
+tsconfig.json
+
+# Lock files
+package-lock.json
+package-lock 2.json
+
+# Documentation (not needed in extension)
+AGENTS.md
+
+# OS files
+.DS_Store
+**/.DS_Store
+*.swp
+
+# Old ignores
+test/**
 jsconfig.json
 vsc-extension-quickstart.md
 .eslintrc.json
