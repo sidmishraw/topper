@@ -101,6 +101,26 @@ export const DATE_FORMAT = 'dateFormat';
 /** follows the ISO date format just like MongoDB: '2019-04-27T14:56:50.664Z-07:00' */
 export const DEFAULT_DATETIME_FORMAT = 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]Z';
 
+// lastModifiedBy feature constants
+//
+/** the key used in the header for the last modified by field in topper config. Defaults to `@last-modified-by` */
+export const LAST_MODIFIED_BY_KEY = 'lastModifiedBy';
+
+/** the default value if none specifically specified for the last modified by field in the header. */
+export const DEFAULT_LAST_MODIFIED_BY_KEY = '@last-modified-by';
+
+/** the regex used for capturing the last modified by value in the header for updation. */
+export const LAST_MODIFIED_BY_CAPTURE_REGEX = 'lastModifiedByRegex';
+
+/** the default regex used for capturing the last modified by key and value for updation. */
+export const DEFAULT_LAST_MODIFIED_BY_CAPTURE_REGEX = new RegExp(
+    '[ ]*\\@last\\-modified\\-by\\s*.?\\s+(.+?)\\s*$',
+    'm'
+);
+
+/** the key for enabling/disabling last modified by feature in topper config. */
+export const ENABLE_LAST_MODIFIED_BY_UPDATE = 'enableLastModifiedByUpdate';
+
 /** insert at row key in topper config. */
 export const INSERT_AT_ROW = 'insertAtRow';
 

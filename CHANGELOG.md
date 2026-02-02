@@ -6,6 +6,27 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v1.6.2]
+
+-   Fixed packaging issue where node_modules dependencies (moment, mustache, bluebird) were excluded from VSIX.
+
+### [v1.6.1]
+
+-   Fixed packaging issue where license resource files were missing from the VSIX, causing "command not found" error.
+
+### [v1.6.0]
+
+-   Added `@last-modified-by` auto-update feature. This field tracks who last modified a file, similar to how `@last-modified` tracks when.
+-   User detection uses a tiered approach:
+    1.  Git config (`user.name` and `user.email`) - preferred for collaborative repos
+    2.  OS user (`os.userInfo()`) - fallback for non-git projects
+    3.  Default: `Unknown <unknown-user@example.com>`
+-   New configuration options:
+    -   `topper.lastModifiedBy` - The key to look for in headers (default: `@last-modified-by`)
+    -   `topper.lastModifiedByRegex` - Regex pattern for capturing the user value
+    -   `topper.enableLastModifiedByUpdate` - Toggle the feature on/off (default: `true`)
+-   Updated default header template to include `@last-modified-by` field
+
 ### [v1.2.0]
 
 -   Added license text generation for header. Added 4 license types:

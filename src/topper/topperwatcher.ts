@@ -44,7 +44,11 @@ import {
     DEFAULT_LAST_MODIFIED_CAPURE_REGEX,
     DATE_FORMAT,
     DEFAULT_DATETIME_FORMAT,
+    LAST_MODIFIED_BY_CAPTURE_REGEX,
+    DEFAULT_LAST_MODIFIED_BY_CAPTURE_REGEX,
+    ENABLE_LAST_MODIFIED_BY_UPDATE,
 } from './topper';
+import { getCurrentUserInfo, formatUserInfo } from '../util/userinfo';
 import * as Moment from 'moment';
 
 /**
@@ -55,8 +59,22 @@ export function startWatcher() {
     workspace.onWillSaveTextDocument((willSaveEvent) => {
         try {
             const changedFileUri = willSaveEvent.document.uri;
+
+            // Skip untitled (unsaved) files - they don't exist on disk yet
+            if (changedFileUri.scheme === 'untitled') {
+                console.debug('Skipping untitled file');
+                return;
+            }
+
             console.info(`Going to update the file at: ${changedFileUri.fsPath}`);
+
+            // Get the workspace folder for git config context
+            const workspaceFolder = workspace.getWorkspaceFolder(changedFileUri);
+            const workingDir = workspaceFolder?.uri.fsPath;
+
+            // Update both lastModified date and lastModifiedBy user
             updateLastModifiedDate(changedFileUri.fsPath);
+            updateLastModifiedBy(changedFileUri.fsPath, workingDir);
         } catch (err) {
             console.log(`Error:: ${err}`);
         }
@@ -142,5 +160,93 @@ function updateLastModifiedDate(filePath: string) {
         });
     } catch (err) {
         console.error(`Error while updating last modified date :: ${err}`);
+    }
+}
+
+/**
+ * Updates the last-modified-by section of the topper header.
+ * @param filePath The file path
+ * @param workingDir Optional working directory for git commands
+ */
+async function updateLastModifiedBy(filePath: string, workingDir?: string) {
+    try {
+        // Check if the feature is enabled
+        const isEnabled: boolean | undefined = workspace.getConfiguration(TOPPER).get(ENABLE_LAST_MODIFIED_BY_UPDATE);
+        if (isEnabled === false) {
+            console.debug('lastModifiedBy update is disabled');
+            return;
+        }
+
+        const modifiedTextDocument = await workspace.openTextDocument(filePath);
+
+        const lines = modifiedTextDocument.getText().split(/\n/);
+
+        // Get the regex pattern for matching lastModifiedBy
+        const lastModifiedByRegexPattern: string | undefined = workspace
+            .getConfiguration(TOPPER)
+            .get(LAST_MODIFIED_BY_CAPTURE_REGEX);
+
+        let lastModifiedByRegex: RegExp;
+        if (lastModifiedByRegexPattern) {
+            lastModifiedByRegex = new RegExp(lastModifiedByRegexPattern, 'm');
+        } else {
+            lastModifiedByRegex = DEFAULT_LAST_MODIFIED_BY_CAPTURE_REGEX;
+        }
+
+        // Find the line containing the lastModifiedBy field
+        const lastModifiedByLine = lines.filter((line) => line.match(lastModifiedByRegex)).find((_, index) => index === 0);
+        if (!lastModifiedByLine) {
+            console.debug('no topper header present with last-modified-by field');
+            return;
+        }
+
+        // Get line number of the matched last modified by line
+        const modifiedByLineIndex = lines.indexOf(lastModifiedByLine);
+
+        // Extract the current user value
+        const matchedUser = lastModifiedByLine.match(lastModifiedByRegex);
+        let matchedUserText: string;
+        if (matchedUser && matchedUser[1]) {
+            matchedUserText = matchedUser[1];
+        } else {
+            console.debug("couldn't extract the user part, bailing out!");
+            return;
+        }
+
+        // Get the starting index of the user text that needs to be replaced
+        const startIndex = lastModifiedByLine.indexOf(matchedUserText);
+        const endIndex = startIndex + matchedUserText.length;
+
+        const replaceRange = new Range(
+            new Position(modifiedByLineIndex, startIndex),
+            new Position(modifiedByLineIndex, endIndex)
+        );
+
+        const editor = window.activeTextEditor;
+        if (!editor) {
+            console.debug("couldn't get the reference to the active text editor, bailing out!");
+            return;
+        }
+        if (editor.document !== modifiedTextDocument) {
+            console.debug('the active file is not the modified file!');
+            return;
+        }
+
+        // Get the current user info
+        const userInfo = await getCurrentUserInfo(workingDir);
+
+        // Format the user info
+        const formattedUser = formatUserInfo(userInfo);
+
+        // Replace with the new user info
+        editor.edit((edit) => {
+            try {
+                edit.replace(replaceRange, formattedUser);
+            } catch (err) {
+                console.error(`Failed to replace the old last modified by with new one! ${err}`);
+            }
+        });
+    } catch (err) {
+        console.error(`Error while updating last modified by :: ${err}`);
     }
 }

@@ -1,3 +1,20 @@
 node_modules
 out
 *.vsix
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Claude Code
+.claude/
+
+# Test artifacts
+.vscode-test/
+
+# OS files
+.DS_Store
+
+# Duplicates
+package-lock 2.json
