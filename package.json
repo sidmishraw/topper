@@ -2,7 +2,7 @@
     "name": "topper",
     "displayName": "topper",
     "description": "A fileheader utility.",
-    "version": "1.6.1",
+    "version": "1.6.2",
     "publisher": "sidmishraw",
     "engines": {
         "vscode": "^1.108.0"

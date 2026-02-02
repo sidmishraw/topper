@@ -10,8 +10,29 @@ src/**
 docs/**
 scripts/**
 
-# Dependencies (bundled at runtime)
-node_modules/**
+# Exclude dev dependencies
+node_modules/@types/**
+node_modules/@vscode/**
+node_modules/mocha/**
+node_modules/typescript/**
+node_modules/vscode-test/**
+node_modules/cross-env/**
+
+# Exclude moment.js locales (not needed, reduces ~1000 files)
+node_modules/moment/locale/**
+node_modules/moment/src/**
+node_modules/moment/min/**
+
+# Exclude unnecessary files from dependencies
+**/node_modules/**/test/**
+**/node_modules/**/tests/**
+**/node_modules/**/*.md
+**/node_modules/**/*.txt
+**/node_modules/**/LICENSE*
+**/node_modules/**/CHANGELOG*
+**/node_modules/**/.travis.yml
+**/node_modules/**/.eslintrc*
+**/node_modules/**/tsconfig.json
 
 # Build artifacts
 *.vsix

@@ -6,6 +6,10 @@ Author: Sidharth Mishra
 
 All notable changes to the "topper" extension will be documented in this file.
 
+### [v1.6.2]
+
+-   Fixed packaging issue where node_modules dependencies (moment, mustache, bluebird) were excluded from VSIX.
+
 ### [v1.6.1]
 
 -   Fixed packaging issue where license resource files were missing from the VSIX, causing "command not found" error.
